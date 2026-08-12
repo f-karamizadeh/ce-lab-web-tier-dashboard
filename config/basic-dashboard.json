@@ -1,0 +1,105 @@
+{
+  "widgets": [
+    {
+      "type": "text",
+      "x": 0,
+      "y": 0,
+      "width": 24,
+      "height": 1,
+      "properties": {
+        "markdown": "# Web Tier Monitoring Dashboard\n**Environment:** Production | **Team:** Cloud Engineering | **On-Call:** [Slack #oncall](https://slack.com/oncall)"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0,
+      "y": 1,
+      "width": 12,
+      "height": 6,
+      "properties": {
+        "title": "Request Rate (per minute)",
+        "metrics": [
+          ["AWS/ApplicationELB", "RequestCount", "LoadBalancer", "YOUR_LB_DIMENSION", {"stat": "Sum", "label": "Total Requests"}]
+        ],
+        "view": "timeSeries",
+        "stacked": false,
+        "region": "us-east-1",
+        "period": 60,
+        "yAxis": {
+          "left": {
+            "label": "Requests",
+            "showUnits": false
+          }
+        }
+      }
+    },
+    {
+      "type": "metric",
+      "x": 12,
+      "y": 1,
+      "width": 12,
+      "height": 6,
+      "properties": {
+        "title": "Error Rate",
+        "metrics": [
+          ["AWS/ApplicationELB", "HTTPCode_Target_5XX_Count", "LoadBalancer", "YOUR_LB_DIMENSION", {"stat": "Sum", "label": "5XX Errors", "color": "#d13212"}],
+          [".", "HTTPCode_Target_4XX_Count", "LoadBalancer", "YOUR_LB_DIMENSION", {"stat": "Sum", "label": "4XX Errors", "color": "#ff7f0e"}],
+          [".", "HTTPCode_Target_2XX_Count", "LoadBalancer", "YOUR_LB_DIMENSION", {"stat": "Sum", "label": "2XX Success", "color": "#2ca02c"}]
+        ],
+        "view": "timeSeries",
+        "stacked": false,
+        "region": "us-east-1",
+        "period": 300
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0,
+      "y": 7,
+      "width": 12,
+      "height": 6,
+      "properties": {
+        "title": "Latency (P95)",
+        "metrics": [
+          ["AWS/ApplicationELB", "TargetResponseTime", "LoadBalancer", "YOUR_LB_DIMENSION", {"stat": "p95", "label": "P95 Latency"}]
+        ],
+        "view": "timeSeries",
+        "region": "us-east-1",
+        "period": 300,
+        "yAxis": {
+          "left": {
+            "label": "Seconds",
+            "showUnits": false
+          }
+        },
+        "annotations": {
+          "horizontal": [
+            {
+              "label": "SLO Target (500ms)",
+              "value": 0.5,
+              "fill": "above",
+              "color": "#d13212"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "metric",
+      "x": 12,
+      "y": 7,
+      "width": 12,
+      "height": 6,
+      "properties": {
+        "title": "Healthy Target Count",
+        "metrics": [
+          ["AWS/ApplicationELB", "HealthyHostCount", "LoadBalancer", "YOUR_LB_DIMENSION", "TargetGroup", "YOUR_TARGETGROUP_DIMENSION", {"stat": "Average", "label": "Healthy Targets"}],
+          [".", "UnHealthyHostCount", "LoadBalancer", "YOUR_LB_DIMENSION", "TargetGroup", "YOUR_TARGETGROUP_DIMENSION", {"stat": "Average", "label": "Unhealthy Targets", "color": "#d13212"}]
+        ],
+        "view": "timeSeries",
+        "region": "us-east-1",
+        "period": 60
+      }
+    }
+  ]
+}
